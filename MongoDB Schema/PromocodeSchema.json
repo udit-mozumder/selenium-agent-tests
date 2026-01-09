@@ -1,0 +1,144 @@
+db.createCollection("discounts", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: [
+        "name",
+        "identifier",
+        "market",
+        "start_date",
+        "end_date",
+        "discount_type",
+        "applicable_globally",
+        "inactive"
+      ],
+      properties: {
+        name: {
+          bsonType: "string",
+          description: "Discount name"
+        },
+
+        identifier: {
+          bsonType: "string",
+          pattern: "^[a-zA-Z0-9]+$",
+          description: "Alphanumeric discount identifier"
+        },
+
+        eligibility_window_days: {
+          bsonType: "int",
+          minimum: 0
+        },
+
+        start_date: {
+          bsonType: "date"
+        },
+
+        end_date: {
+          bsonType: "date"
+        },
+
+        market: {
+          bsonType: "object",
+          required: ["market_id", "name"],
+          properties: {
+            market_id: {
+              bsonType: "objectId"
+            },
+            name: {
+              bsonType: "string"
+            }
+          }
+        },
+
+        is_default: {
+          bsonType: "bool"
+        },
+
+        discount_type: {
+          enum: [
+            "product_only",
+            "service_only",
+            "product_and_service"
+          ]
+        },
+
+        environment_flag: {
+          bsonType: "bool"
+        },
+
+        applicable_globally: {
+          bsonType: "bool"
+        },
+
+        inactive: {
+          bsonType: "bool"
+        },
+
+        partners: {
+          bsonType: "array",
+          items: {
+            bsonType: "object",
+            required: ["partner_id", "name"],
+            properties: {
+              partner_id: {
+                bsonType: "objectId"
+              },
+              name: {
+                bsonType: "string"
+              }
+            }
+          }
+        },
+
+        product_models: {
+          bsonType: "array",
+          items: {
+            bsonType: "object",
+            required: ["sku", "name"],
+            properties: {
+              sku: {
+                bsonType: "string"
+              },
+              name: {
+                bsonType: "string"
+              }
+            }
+          }
+        },
+
+        plan_benefits: {
+          bsonType: "array",
+          items: {
+            bsonType: "object",
+            required: ["unit", "value", "plan", "plan_id", "adjustment"],
+            properties: {
+              unit: {
+                bsonType: "string"
+              },
+              value: {
+                bsonType: "int"
+              },
+              plan: {
+                bsonType: "string"
+              },
+              plan_id: {
+                bsonType: "string"
+              },
+              adjustment: {
+                bsonType: "int"
+              }
+            }
+          }
+        },
+
+        created_at: {
+          bsonType: "date"
+        },
+
+        updated_at: {
+          bsonType: "date"
+        }
+      }
+    }
+  }
+});
