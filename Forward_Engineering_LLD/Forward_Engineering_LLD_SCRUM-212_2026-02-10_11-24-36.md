@@ -1,1 +1,0 @@
-LLD generation aborted: MongoDB schema file 'DatabaseSchema.json' could not be retrieved from GitHub. Please ensure the schema file exists and is accessible. No LLD generated.
