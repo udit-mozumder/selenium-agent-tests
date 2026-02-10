@@ -1,54 +1,171 @@
 {
-  "database": "discount_management_db",
-  "collections": [
-    {
-      "name": "discounts",
-      "description": "Discount configuration knowledge base for Discount Management service",
-
-      "validator": {
-        "$jsonSchema": {
-          "bsonType": "object",
-          "title": "Discount",
-          "description": "Discount configuration knowledge base for Discount Management service",
-
-          "required": [
-            "name",
-            "identifier",
-            "market",
-            "start_date",
-            "end_date",
-            "discount_type",
-            "applicable_globally",
-            "inactive"
-          ],
-
-          "properties": {
-            "_id": { "bsonType": "objectId" },
-
-            "name": {
-              "bsonType": "string",
-              "description": "Human readable discount name"
-            },
-
-            "identifier": {
-              "bsonType": "string",
-              "pattern": "^[a-zA-Z0-9]+$",
-              "description": "Alphanumeric discount identifier"
-            }
-
-            // rest exactly as you already have
+  "$jsonSchema": {
+    "bsonType": "object",
+    "title": "Discount",
+    "description": "Discount configuration knowledge base for Discount Management service",
+ 
+    "required": [
+      "name",
+      "identifier",
+      "market",
+      "start_date",
+      "end_date",
+      "discount_type",
+      "applicable_globally",
+      "inactive"
+    ],
+ 
+    "properties": {
+      "_id": {
+        "bsonType": "objectId"
+      },
+ 
+      "name": {
+        "bsonType": "string",
+        "description": "Human readable discount name"
+      },
+ 
+      "identifier": {
+        "bsonType": "string",
+        "pattern": "^[a-zA-Z0-9]+$",
+        "description": "Alphanumeric discount identifier"
+      },
+ 
+      "eligibility_window_days": {
+        "bsonType": "int",
+        "minimum": 0,
+        "description": "Eligibility window in days"
+      },
+ 
+      "start_date": {
+        "bsonType": "date",
+        "description": "Discount start date (UTC)"
+      },
+ 
+      "end_date": {
+        "bsonType": "date",
+        "description": "Discount end date (UTC)"
+      },
+ 
+      "market": {
+        "bsonType": "object",
+        "required": ["market_id", "name"],
+        "properties": {
+          "market_id": {
+            "bsonType": "objectId",
+            "description": "Market identifier"
           },
-
-          "additionalProperties": false
+          "name": {
+            "bsonType": "string",
+            "description": "Market name"
+          }
         }
       },
-
-      "indexes": [
-        {
-          "fields": ["identifier"],
-          "type": "unique"
+ 
+      "is_default": {
+        "bsonType": "bool",
+        "description": "Default discount flag"
+      },
+ 
+      "discount_type": {
+        "enum": [
+          "product_only",
+          "service_only",
+          "product_and_service"
+        ],
+        "description": "Discount applicability type"
+      },
+ 
+      "environment_flag": {
+        "bsonType": "bool",
+        "description": "Environment flag"
+      },
+ 
+      "applicable_globally": {
+        "bsonType": "bool",
+        "description": "Applies to all partners if true"
+      },
+ 
+      "inactive": {
+        "bsonType": "bool",
+        "description": "Inactive discount flag"
+      },
+ 
+      "partners": {
+        "bsonType": "array",
+        "description": "Applicable partners",
+        "items": {
+          "bsonType": "object",
+          "required": ["partner_id", "name"],
+          "properties": {
+            "partner_id": {
+              "bsonType": "objectId"
+            },
+            "name": {
+              "bsonType": "string"
+            }
+          }
         }
-      ]
-    }
-  ]
+      },
+ 
+      "product_models": {
+        "bsonType": "array",
+        "description": "Associated product SKUs",
+        "items": {
+          "bsonType": "object",
+          "required": ["sku", "name"],
+          "properties": {
+            "sku": {
+              "bsonType": "string"
+            },
+            "name": {
+              "bsonType": "string"
+            }
+          }
+        }
+      },
+ 
+      "plan_benefits": {
+        "bsonType": "array",
+        "description": "Plan benefit configurations",
+        "items": {
+          "bsonType": "object",
+          "required": [
+            "unit",
+            "value",
+            "plan",
+            "plan_id",
+            "adjustment"
+          ],
+          "properties": {
+            "unit": {
+              "bsonType": "string"
+            },
+            "value": {
+              "bsonType": "int"
+            },
+            "plan": {
+              "bsonType": "string"
+            },
+            "plan_id": {
+              "bsonType": "string"
+            },
+            "adjustment": {
+              "bsonType": "int"
+            }
+          }
+        }
+      },
+ 
+      "created_at": {
+        "bsonType": "date"
+      },
+ 
+      "updated_at": {
+        "bsonType": "date"
+      }
+    },
+ 
+    "additionalProperties": false
+  }
 }
